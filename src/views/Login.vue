@@ -38,7 +38,11 @@
             minlength="6"
           ></el-input>
         </el-form-item>
-        <el-form-item prop="checkPass" class="item-form">
+        <el-form-item
+          prop="checkPass"
+          class="item-form"
+          v-if="model === 'register'"
+        >
           <label>确认密码</label>
           <el-input
             type="password"
@@ -71,25 +75,23 @@
 </template>
 
 <script>
+import { stripscript, validateEmail } from "../utils/validate";
 export default {
   name: "login",
   data() {
     var validateUsername = (rule, value, callback) => {
-      let reg = /^([a-zA-Z]|[0-9])(\w|\\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/; // 验证邮箱
       if (value === "") {
         callback(new Error("请输入用户名"));
-      } else if (!reg.test(value)) {
+      } else if (!validateEmail(value)) {
         callback(new Error("用户名必须是邮箱格式"));
       } else {
-        if (this.ruleForm.username !== "") {
-          this.$refs.ruleForm.validateField("username");
-        }
         callback();
       }
     };
     var validatePass = (rule, value, callback) => {
-      let reg = /^(?!\D+$)(?![^a-zA-Z]+$)\S{6,20}$/; // 字母+数字
-
+      let reg = /^(?!\D+$)(?![^a-zA-Z]+$)\S{6,20}$/; // 6-20位 字母+数字
+      this.ruleForm.pass = stripscript(value);
+      value = this.ruleForm.pass;
       if (value === "") {
         callback(new Error("请输入密码"));
       } else if (!reg.test(value)) {
@@ -112,26 +114,22 @@ export default {
     };
 
     var checkCode = (rule, value, callback) => {
+      this.ruleForm.code = stripscript(value);
+      value = this.ruleForm.code;
+      let reg = /^[a-z0-9]{6}$/; // 字母 或 数字
       if (!value) {
         return callback(new Error("验证码不能为空"));
+      } else if (!reg.test(value)) {
+        callback(new Error("验证码必须是字母 或 数字"));
+      } else {
+        callback();
       }
-      setTimeout(() => {
-        let reg = /^[a-z0-9]{6}$/; // 字母 或 数字
-        if (!reg.test(value)) {
-          callback(new Error("验证码必须是字母 或 数字"));
-        } else {
-          if (value < 18) {
-            callback(new Error("必须年满18岁"));
-          } else {
-            callback();
-          }
-        }
-      }, 1000);
     };
     return {
+      model: "login",
       menuTab: [
-        { txt: "登录", current: true },
-        { txt: "注册", current: false }
+        { txt: "登录", current: true, type: "login" },
+        { txt: "注册", current: false, type: "register" }
       ],
       ruleForm: {
         username: "",
@@ -154,6 +152,7 @@ export default {
       this.menuTab.forEach(elem => {
         elem.current = false;
       });
+      this.model = data.type;
       data.current = true;
     },
     submitForm(formName) {

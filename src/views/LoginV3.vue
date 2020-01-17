@@ -66,7 +66,9 @@
             type="danger"
             @click="submitForm('ruleForm')"
             class="block login-btn"
-            >提交</el-button
+            :disabled="loginButtomStatus"
+          >
+            {{ model === "login" ? "登录" : "注册" }}</el-button
           >
         </el-form-item>
       </el-form>
@@ -138,6 +140,7 @@ export default {
     ]);
 
     const model = ref("login");
+    const loginButtomStatus = ref(true);
     const ruleForm = reactive({
       username: "",
       pass: "",
@@ -171,9 +174,24 @@ export default {
       });
     };
     const getSms = () => {
+      if (!ruleForm.username) {
+        context.root.$message.error("用户名不能为空");
+        return false;
+      }
+      if (!validateEmail(ruleForm.username)) {
+        context.root.$message.error("用户名必须是邮箱格式");
+        return false;
+      }
       GetSms({
-        username: ruleForm.username
-      });
+        username: ruleForm.username,
+        module: "login"
+      })
+        .then(response => {
+          console.log("GetSms response", response);
+        })
+        .catch(error => {
+          console.log("GetSms error", error);
+        });
     };
     // 生命周期挂在完成后
     onMounted(() => {
@@ -183,6 +201,7 @@ export default {
     return {
       menuTab,
       model,
+      loginButtomStatus,
       ruleForm,
       rules,
       toggleMenu,

@@ -57,7 +57,7 @@
               <el-input v-model="ruleForm.code"></el-input>
             </el-col>
             <el-col :span="8">
-              <el-button type="success">获取验证码</el-button>
+              <el-button type="success" @click="getSms()">获取验证码</el-button>
             </el-col>
           </el-row>
         </el-form-item>
@@ -75,6 +75,7 @@
 </template>
 
 <script>
+import { GetSms } from "@/api/login";
 import { reactive, ref, onMounted } from "@vue/composition-api";
 import { stripscript, validateEmail } from "../utils/validate";
 export default {
@@ -169,6 +170,11 @@ export default {
         }
       });
     };
+    const getSms = () => {
+      GetSms({
+        username: ruleForm.username
+      });
+    };
     // 生命周期挂在完成后
     onMounted(() => {
       console.log("onMounted 生命周期挂在完成后");
@@ -180,7 +186,8 @@ export default {
       ruleForm,
       rules,
       toggleMenu,
-      submitForm
+      submitForm,
+      getSms
     };
   }
 };

@@ -84,7 +84,7 @@
 </template>
 
 <script>
-import { GetSms, Register } from "@/api/login";
+import { GetSms, Register, Login } from "@/api/login";
 import { reactive, ref, onMounted } from "@vue/composition-api";
 import { stripscript, validateEmail } from "../utils/validate";
 export default {
@@ -182,24 +182,11 @@ export default {
     const submitForm = formName => {
       context.refs[formName].validate(valid => {
         if (valid) {
-          let requestData = {
-            username: ruleForm.username,
-            password: ruleForm.pass,
-            code: ruleForm.code,
-            module: model.value
-          };
-          Register(requestData)
-            .then(response => {
-              console.log("Register response", response);
-              let data = response.data;
-              context.root.$message({
-                message: data.message,
-                type: "success"
-              });
-            })
-            .catch(error => {
-              console.log("Register error", error);
-            });
+          if (model.value === "register") {
+            register();
+          } else {
+            login();
+          }
         } else {
           console.log("error submit!!");
           return false;
@@ -237,9 +224,59 @@ export default {
           console.log("GetSms error", error);
         });
     };
-
+    // 登录
+    const login = () => {
+      let requestData = {
+        username: ruleForm.username,
+        password: ruleForm.pass,
+        code: ruleForm.code,
+        module: model.value
+      };
+      Login(requestData)
+        .then(response => {
+          console.log("Login response", response);
+          let data = response.data;
+          context.root.$message({
+            message: data.message,
+            type: "success"
+          });
+          clearCountDown();
+        })
+        .catch(error => {
+          console.log("Login error", error);
+        });
+    };
+    // 注册
+    const register = () => {
+      let requestData = {
+        username: ruleForm.username,
+        password: ruleForm.pass,
+        code: ruleForm.code,
+        module: model.value
+      };
+      Register(requestData)
+        .then(response => {
+          console.log("Register response", response);
+          let data = response.data;
+          context.root.$message({
+            message: data.message,
+            type: "success"
+          });
+          // 跳转到登录tab
+          toggleMenu(menuTab[0]);
+          clearCountDown();
+        })
+        .catch(error => {
+          console.log("Register error", error);
+        });
+    };
     // 倒计时
     const countDown = number => {
+      // 判断定时器是否存在 存在则清除
+      if (timer.value) {
+        clearInterval(timer.value);
+      }
+
       let t = number;
       timer.value = setInterval(() => {
         t = t - 1;
@@ -247,9 +284,16 @@ export default {
           clearInterval(timer.value);
           codeButton.status = false;
           codeButton.text = "再次获取";
+        } else {
+          codeButton.text = `倒计时${t}秒`;
         }
-        codeButton.text = `倒计时${t}秒`;
       }, 1000);
+    };
+    // 清除倒计时
+    const clearCountDown = () => {
+      codeButton.status = false;
+      codeButton.text = "获取验证码";
+      clearInterval(timer.value);
     };
     // 生命周期挂在完成后
     onMounted(() => {

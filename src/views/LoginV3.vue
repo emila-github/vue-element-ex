@@ -56,8 +56,15 @@
             <el-col :span="15">
               <el-input v-model="ruleForm.code"></el-input>
             </el-col>
-            <el-col :span="8">
-              <el-button type="success" @click="getSms()">获取验证码</el-button>
+            <el-col :span="9">
+              <el-button
+                type="success"
+                class="block"
+                @click="getSms()"
+                :disabled="codeButton.status"
+              >
+                {{ codeButton.text }}
+              </el-button>
             </el-col>
           </el-row>
         </el-form-item>
@@ -66,7 +73,7 @@
             type="danger"
             @click="submitForm('ruleForm')"
             class="block login-btn"
-            :disabled="loginButtomStatus"
+            :disabled="loginButtonStatus"
           >
             {{ model === "login" ? "登录" : "注册" }}</el-button
           >
@@ -77,7 +84,7 @@
 </template>
 
 <script>
-import { GetSms } from "@/api/login";
+import { GetSms, Register } from "@/api/login";
 import { reactive, ref, onMounted } from "@vue/composition-api";
 import { stripscript, validateEmail } from "../utils/validate";
 export default {
@@ -140,7 +147,14 @@ export default {
     ]);
 
     const model = ref("login");
-    const loginButtomStatus = ref(true);
+    const loginButtonStatus = ref(true);
+    // 验证码按钮状态
+    const codeButton = reactive({
+      status: false,
+      text: "获取验证码"
+    });
+    // 倒计时
+    let timer = ref(null);
     const ruleForm = reactive({
       username: "",
       pass: "",
@@ -162,11 +176,30 @@ export default {
       });
       model.value = data.type;
       data.current = true;
+      // 重置表单
+      context.refs["ruleForm"].resetFields();
     };
     const submitForm = formName => {
       context.refs[formName].validate(valid => {
         if (valid) {
-          alert("submit!");
+          let requestData = {
+            username: ruleForm.username,
+            password: ruleForm.pass,
+            code: ruleForm.code,
+            module: model.value
+          };
+          Register(requestData)
+            .then(response => {
+              console.log("Register response", response);
+              let data = response.data;
+              context.root.$message({
+                message: data.message,
+                type: "success"
+              });
+            })
+            .catch(error => {
+              console.log("Register error", error);
+            });
         } else {
           console.log("error submit!!");
           return false;
@@ -182,16 +215,41 @@ export default {
         context.root.$message.error("用户名必须是邮箱格式");
         return false;
       }
+      codeButton.status = true;
+      codeButton.text = "发生中";
+
       GetSms({
         username: ruleForm.username,
-        module: "login"
+        module: model.value
       })
         .then(response => {
           console.log("GetSms response", response);
+          let data = response.data;
+          context.root.$message({
+            message: data.message,
+            type: "success"
+          });
+          loginButtonStatus.value = false;
+          // 调定时器，倒计时60秒
+          countDown(60);
         })
         .catch(error => {
           console.log("GetSms error", error);
         });
+    };
+
+    // 倒计时
+    const countDown = number => {
+      let t = number;
+      timer.value = setInterval(() => {
+        t = t - 1;
+        if (t === 0) {
+          clearInterval(timer.value);
+          codeButton.status = false;
+          codeButton.text = "再次获取";
+        }
+        codeButton.text = `倒计时${t}秒`;
+      }, 1000);
     };
     // 生命周期挂在完成后
     onMounted(() => {
@@ -201,7 +259,8 @@ export default {
     return {
       menuTab,
       model,
-      loginButtomStatus,
+      loginButtonStatus,
+      codeButton,
       ruleForm,
       rules,
       toggleMenu,

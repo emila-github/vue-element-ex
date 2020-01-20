@@ -240,6 +240,7 @@ export default {
             message: data.message,
             type: "success"
           });
+          context.root.$router.push({ name: "Console" });
           clearCountDown();
         })
         .catch(error => {

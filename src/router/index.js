@@ -7,11 +7,19 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: "/",
-    redirect: "/login-v3"
+    redirect: "/login-v3",
+    hidden: true,
+    meta: {
+      name: "登录v2"
+    }
   },
   {
     path: "/login",
     name: "login",
+    hidden: true,
+    meta: {
+      name: "登录v2"
+    },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -21,11 +29,59 @@ const routes = [
   {
     path: "/login-v3",
     name: "loginV3",
+    hidden: true,
+    meta: {
+      name: "登录v3"
+    },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () =>
       import(/* webpackChunkName: "login" */ "../views/LoginV3.vue")
+  },
+  {
+    path: "/console",
+    name: "Console",
+    meta: {
+      name: "控制台"
+    },
+    component: () => import("../views/Layout"),
+    children: [
+      {
+        path: "/console",
+        name: "Index",
+        meta: {
+          name: "首页"
+        },
+        component: () => import("../views/Console")
+      }
+    ]
+  },
+  {
+    path: "/info",
+    name: "Info",
+    meta: {
+      name: "信息管理"
+    },
+    component: () => import("../views/Layout"),
+    children: [
+      {
+        path: "/infoIndex",
+        name: "InfoIndex",
+        meta: {
+          name: "信息列表"
+        },
+        component: () => import("../views/Info/index")
+      },
+      {
+        path: "/infoCategory",
+        name: "InfoCategory",
+        meta: {
+          name: "信息分类"
+        },
+        component: () => import("../views/Info/Category")
+      }
+    ]
   }
 ];
 

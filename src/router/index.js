@@ -43,7 +43,8 @@ const routes = [
     path: "/console",
     name: "Console",
     meta: {
-      name: "控制台"
+      name: "控制台",
+      icon: "console"
     },
     component: () => import("../views/Layout"),
     children: [
@@ -61,7 +62,8 @@ const routes = [
     path: "/info",
     name: "Info",
     meta: {
-      name: "信息管理"
+      name: "信息管理",
+      icon: "menu"
     },
     component: () => import("../views/Layout"),
     children: [

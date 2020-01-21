@@ -25,7 +25,7 @@ export default {
   // eslint-disable-next-line no-unused-vars
   setup(props, { root }) {
     const handlerNarBar = () => {
-      root.$store.commit("SET_COLLAPSE");
+      root.$store.commit("app/SET_COLLAPSE");
       // root.$store.dispatch("setMenuStatus", { test: "test1" });
     };
     const test = () => {

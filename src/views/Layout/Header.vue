@@ -26,6 +26,7 @@ export default {
   setup(props, { root }) {
     const handlerNarBar = () => {
       root.$store.commit("SET_COLLAPSE");
+      // root.$store.dispatch("setMenuStatus", { test: "test1" });
     };
     const test = () => {
       console.log("test");

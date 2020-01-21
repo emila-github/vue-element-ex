@@ -22,6 +22,11 @@ export default new Vuex.Store({
     //   state.count = payload;
     // }
   },
-  actions: {},
+  actions: {
+    // setMenuStatus(content, data) {
+    //   console.log("setMenuStatus", content, data);
+    //   content.commit("SET_COLLAPSE");
+    // }
+  },
   modules: {}
 });

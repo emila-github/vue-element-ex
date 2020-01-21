@@ -5,7 +5,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    isCollapse: false
+    isCollapse: JSON.parse(sessionStorage.getItem("isCollapse")) || false
     // count: 10
   },
   getters: {
@@ -15,6 +15,8 @@ export default new Vuex.Store({
     SET_COLLAPSE(state) {
       console.log("todo SET_COLLAPSE");
       state.isCollapse = !state.isCollapse;
+      // html5 本地存储
+      sessionStorage.setItem("isCollapse", JSON.stringify(state.isCollapse));
     }
     // SET_COUNT(state, payload) {
     //   state.count = payload;

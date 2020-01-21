@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
-
+import { Login } from "@/api/login";
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -23,6 +23,17 @@ export default new Vuex.Store({
     // }
   },
   actions: {
+    login(content, payload) {
+      return new Promise((resolve, reject) => {
+        Login(payload)
+          .then(response => {
+            resolve(response);
+          })
+          .catch(error => {
+            reject(error);
+          });
+      });
+    }
     // setMenuStatus(content, data) {
     //   console.log("setMenuStatus", content, data);
     //   content.commit("SET_COLLAPSE");

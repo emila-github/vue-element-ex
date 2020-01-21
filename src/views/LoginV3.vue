@@ -84,6 +84,7 @@
 </template>
 
 <script>
+// eslint-disable-next-line no-unused-vars
 import { GetSms, Register, Login } from "@/api/login";
 import { reactive, ref, onMounted } from "@vue/composition-api";
 import { stripscript, validateEmail } from "../utils/validate";
@@ -232,9 +233,10 @@ export default {
         code: ruleForm.code,
         module: model.value
       };
-      Login(requestData)
+      context.root.$store
+        .dispatch("login", requestData)
         .then(response => {
-          console.log("Login response", response);
+          console.log("login response", response);
           let data = response.data;
           context.root.$message({
             message: data.message,
@@ -246,6 +248,20 @@ export default {
         .catch(error => {
           console.log("Login error", error);
         });
+      // Login(requestData)
+      //   .then(response => {
+      //     console.log("Login response", response);
+      //     let data = response.data;
+      //     context.root.$message({
+      //       message: data.message,
+      //       type: "success"
+      //     });
+      //     context.root.$router.push({ name: "Console" });
+      //     clearCountDown();
+      //   })
+      //   .catch(error => {
+      //     console.log("Login error", error);
+      //   });
     };
     // 注册
     const register = () => {

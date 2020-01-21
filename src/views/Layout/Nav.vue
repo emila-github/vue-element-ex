@@ -39,7 +39,7 @@ export default {
     console.log(routers);
     // const isCollapse = ref(false);
     // computed 监听
-    const isCollapse = computed(() => root.$store.state.isCollapse);
+    const isCollapse = computed(() => root.$store.state.app.isCollapse);
     // 函数
     const handleOpen = (key, keyPath) => {
       console.log(key, keyPath);

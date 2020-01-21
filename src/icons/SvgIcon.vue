@@ -11,7 +11,7 @@ export default {
   props: {
     iconClass: {
       type: String,
-      default: "menu",
+      default: "",
       required: true
     },
     className: {
@@ -20,7 +20,7 @@ export default {
     }
   },
   setup(props) {
-    console.log(props);
+    console.log("svgicon props", props);
 
     const iconName = computed(() => {
       return `#icon-${props.iconClass}`;

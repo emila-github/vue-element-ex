@@ -1,5 +1,6 @@
 <template>
   <div id="NavWrap">
+    <img src="../../assets/logo.png" alt="" class="logo" />
     <el-menu
       class="el-menu-vertical-demo"
       @open="handleOpen"
@@ -70,6 +71,11 @@ export default {
   svg {
     font-size: 20px;
     margin-right: 10px;
+  }
+  .logo {
+    display: block;
+    margin: 50px auto;
+    width: 92px;
   }
 }
 </style>

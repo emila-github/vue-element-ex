@@ -87,6 +87,7 @@ export default {
     display: block;
     margin: 50px auto;
     width: 92px;
+    @include webkit(transition, all 0.3s ease 0s);
   }
 }
 .open {
@@ -97,6 +98,9 @@ export default {
 .close {
   #NavWrap {
     width: $navCloseWidth;
+    .logo {
+      width: 60%;
+    }
   }
 }
 </style>

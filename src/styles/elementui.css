@@ -5,3 +5,15 @@
 .el-menu-item.is-active {
   background-color: #f56c6c !important;
 }
+
+.close .el-submenu.is-opened > .el-submenu__title {
+  background-color: red !important;
+}
+
+.el-menu--vertical .el-menu-item {
+  line-height: 56px;
+}
+
+.el-menu--vertical .el-menu-item:hover {
+  background-color: red !important;
+}

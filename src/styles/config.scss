@@ -1,2 +1,11 @@
 $navWidth: 250px;
+$navCloseWidth: 64px;
 $layoutHeader: 75px;
+
+@mixin webkit ($type, $value) {
+  -webkit-#{$type}: $value;
+  -moz-#{$type}: $value;
+  -o-#{$type}: $value;
+  -ms-#{$type}: $value;
+  #{$type}: $value;
+}

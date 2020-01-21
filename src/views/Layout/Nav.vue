@@ -31,19 +31,29 @@
 </template>
 
 <script>
-import { reactive, ref, onMounted } from "@vue/composition-api";
+import { reactive, onMounted, computed } from "@vue/composition-api";
 export default {
   name: "navWrap",
   setup(props, { root }) {
     const routers = reactive(root.$router.options.routes);
     console.log(routers);
-    const isCollapse = ref(false);
+    // const isCollapse = ref(false);
+    // computed 监听
+    const isCollapse = computed(() => root.$store.state.isCollapse);
+    // 函数
     const handleOpen = (key, keyPath) => {
       console.log(key, keyPath);
     };
     const handleClose = (key, keyPath) => {
       console.log(key, keyPath);
     };
+
+    // // 获取state
+    // console.log("==", root.$store.state.isCollapse);
+    // console.log("==", root.$store.getters.count);
+    // // 设置state
+    // root.$store.commit("SET_COUNT", 11);
+    // console.log("==", root.$store.state.count);
 
     // 生命周期挂在完成后
     onMounted(() => {
@@ -68,6 +78,7 @@ export default {
   width: $navWidth;
   height: 100vh;
   background-color: #344a5f;
+  @include webkit(transition, all 0.3s ease 0s);
   svg {
     font-size: 20px;
     margin-right: 10px;
@@ -76,6 +87,16 @@ export default {
     display: block;
     margin: 50px auto;
     width: 92px;
+  }
+}
+.open {
+  #NavWrap {
+    width: $navWidth;
+  }
+}
+.close {
+  #NavWrap {
+    width: $navCloseWidth;
   }
 }
 </style>

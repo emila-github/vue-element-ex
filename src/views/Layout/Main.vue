@@ -42,4 +42,18 @@ export default {};
     }
   }
 }
+.open {
+  #MainWrap {
+    .main-content {
+      padding-left: $navWidth + 30;
+    }
+  }
+}
+.close {
+  #MainWrap {
+    .main-content {
+      padding-left: $navCloseWidth + 30;
+    }
+  }
+}
 </style>

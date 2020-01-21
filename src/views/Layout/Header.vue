@@ -1,8 +1,15 @@
 <template>
-  <div id="Header">
-    <svg-icon class="nav-bar-icon" iconClass="menu" className="menu"></svg-icon>
+  <div id="HeaderWarp">
+    <div @click="handlerNarBar">
+      <svg-icon
+        class="nav-bar-icon"
+        iconClass="menu"
+        className="menu"
+      ></svg-icon>
+    </div>
+
     <div class="header-right">
-      <div class="user-info">管理员</div>
+      <div class="user-info" @click="test">管理员</div>
       <svg-icon
         class="close-icon"
         iconClass="close"
@@ -12,12 +19,29 @@
   </div>
 </template>
 <script>
-export default {};
+import { onMounted } from "@vue/composition-api";
+export default {
+  name: "headerWarp",
+  // eslint-disable-next-line no-unused-vars
+  setup(props, { root }) {
+    const handlerNarBar = () => {
+      root.$store.commit("SET_COLLAPSE");
+    };
+    const test = () => {
+      console.log("test");
+    };
+    onMounted(() => {});
+    return {
+      handlerNarBar,
+      test
+    };
+  }
+};
 </script>
 <style lang="scss" scoped>
 @import "../../styles/config.scss";
 
-#Header {
+#HeaderWarp {
   position: fixed;
   top: 0;
   left: $navWidth;
@@ -56,6 +80,16 @@ export default {};
         cursor: pointer;
       }
     }
+  }
+}
+.open {
+  #HeaderWarp {
+    left: $navWidth;
+  }
+}
+.close {
+  #HeaderWarp {
+    left: $navCloseWidth;
   }
 }
 </style>

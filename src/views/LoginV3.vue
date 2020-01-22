@@ -234,7 +234,7 @@ export default {
         module: model.value
       };
       context.root.$store
-        .dispatch("login", requestData)
+        .dispatch("app/login", requestData)
         .then(response => {
           console.log("login response", response);
           let data = response.data;

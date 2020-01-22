@@ -9,7 +9,7 @@
     </div>
 
     <div class="header-right">
-      <div class="user-info" @click="test">管理员</div>
+      <div class="user-info" @click="test">{{ username }}</div>
       <svg-icon
         class="close-icon"
         iconClass="close"
@@ -19,11 +19,12 @@
   </div>
 </template>
 <script>
-import { onMounted } from "@vue/composition-api";
+import { onMounted, computed } from "@vue/composition-api";
 export default {
   name: "headerWarp",
   // eslint-disable-next-line no-unused-vars
   setup(props, { root }) {
+    const username = computed(() => root.$store.state.app.username);
     const handlerNarBar = () => {
       root.$store.commit("app/SET_COLLAPSE");
       // root.$store.dispatch("setMenuStatus", { test: "test1" });
@@ -33,6 +34,7 @@ export default {
     };
     onMounted(() => {});
     return {
+      username,
       handlerNarBar,
       test
     };

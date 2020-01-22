@@ -1,5 +1,11 @@
 import { Login } from "@/api/login";
-import { setToken, setUsername, getUsername } from "@/utils/app";
+import {
+  setToken,
+  setUsername,
+  getUsername,
+  remmoveToken,
+  remmoveUsername
+} from "@/utils/app";
 
 const state = {
   isCollapse: JSON.parse(sessionStorage.getItem("isCollapse")) || false,
@@ -44,6 +50,15 @@ const actions = {
         .catch(error => {
           reject(error);
         });
+    });
+  },
+  exit({ commit }) {
+    return new Promise(resolve => {
+      remmoveToken();
+      remmoveUsername();
+      commit("SET_TOKEN", "");
+      commit("SET_USERNAME", "");
+      resolve();
     });
   }
   // setMenuStatus(content, data) {

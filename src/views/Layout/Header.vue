@@ -10,11 +10,9 @@
 
     <div class="header-right">
       <div class="user-info" @click="test">{{ username }}</div>
-      <svg-icon
-        class="close-icon"
-        iconClass="close"
-        className="console"
-      ></svg-icon>
+      <div @click="handlerExit" class="close-icon">
+        <svg-icon iconClass="close" className="console"></svg-icon>
+      </div>
     </div>
   </div>
 </template>
@@ -29,6 +27,13 @@ export default {
       root.$store.commit("app/SET_COLLAPSE");
       // root.$store.dispatch("setMenuStatus", { test: "test1" });
     };
+    const handlerExit = () => {
+      root.$store.dispatch("app/exit").then(() => {
+        root.$router.push({
+          name: "loginV3"
+        });
+      });
+    };
     const test = () => {
       console.log("test");
     };
@@ -36,6 +41,7 @@ export default {
     return {
       username,
       handlerNarBar,
+      handlerExit,
       test
     };
   }

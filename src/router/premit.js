@@ -1,5 +1,6 @@
 import router from "./index";
-import { getToken } from "@/utils/app";
+import store from "../store/index";
+import { getToken, remmoveToken, remmoveUsername } from "@/utils/app";
 const whiteRouter = ["/login-v3"]; // 路由白名单 不需要验证登录的页面
 
 // 路由守卫
@@ -12,6 +13,15 @@ router.beforeEach((to, from, next) => {
   if (getToken()) {
     // TODO 路由动态添加，分配菜单，每个角色分配不同的菜单
     console.log("getToken 存在");
+    if (to.path === "/login-v3") {
+      remmoveToken();
+      remmoveUsername();
+      store.commit("app/SET_TOKEN", "");
+      store.commit("app/SET_USERNAME", "");
+      next();
+    } else {
+      next();
+    }
   } else {
     console.log("getToken 不存在");
     if (whiteRouter.includes(to.path)) {

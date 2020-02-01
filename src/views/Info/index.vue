@@ -81,7 +81,9 @@
 
     <el-row :gutter="20" align="middle" style="margin-top: 30px;">
       <el-col :span="2">
-        <el-button size="small">批量删除</el-button>
+        <el-button size="small" @click="handleDeleteSelected"
+          >批量删除</el-button
+        >
       </el-col>
       <el-col :span="22" class="pagination-bar">
         <el-pagination background layout="prev, pager, next" :total="1000">
@@ -105,7 +107,8 @@ export default {
   components: {
     InfoDialog
   },
-  setup() {
+  // eslint-disable-next-line no-unused-vars
+  setup(props, { root }) {
     const dialogVisible = ref(false);
     const typeOptions = reactive([
       {
@@ -163,13 +166,27 @@ export default {
         address: "上海市普陀区金沙江路 1516 弄"
       }
     ]);
-
+    const confirmDelete = id => {
+      console.log("todo confirmDelete", id);
+    };
     const handleEdit = (index, row) => {
       console.log(index, row);
     };
     const handleDelete = (index, row) => {
       console.log(index, row);
+      root.confirm({
+        content: "此操作将永久删除该文件, 是否继续?",
+        tip: "警告",
+        fn: confirmDelete,
+        id: index
+      });
     };
+    const handleDeleteSelected = () => {
+      root.confirm({
+        content: "是否删除选中记录, 是否继续?"
+      });
+    };
+
     const closeInfoDialog = () => {
       dialogVisible.value = false;
     };
@@ -182,7 +199,8 @@ export default {
       onSubmit,
       tableData,
       handleEdit,
-      handleDelete
+      handleDelete,
+      handleDeleteSelected
     };
   }
 };

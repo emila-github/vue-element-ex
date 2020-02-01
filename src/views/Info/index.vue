@@ -99,8 +99,9 @@
 
 <script>
 // eslint-disable-next-line no-unused-vars
-import { reactive, ref, onMounted } from "@vue/composition-api";
+import { reactive, ref, onMounted, watch } from "@vue/composition-api";
 import InfoDialog from "./dialog/InfoDialog";
+import { global } from "@/utils/globalV3";
 
 export default {
   name: "InfoIndex",
@@ -109,6 +110,10 @@ export default {
   },
   // eslint-disable-next-line no-unused-vars
   setup(props, { root }) {
+    const { str, confirm } = global();
+    watch(() => {
+      console.log("str.value", str.value);
+    });
     const dialogVisible = ref(false);
     const typeOptions = reactive([
       {
@@ -174,12 +179,18 @@ export default {
     };
     const handleDelete = (index, row) => {
       console.log(index, row);
-      root.confirm({
+      confirm({
         content: "此操作将永久删除该文件, 是否继续?",
         tip: "警告",
         fn: confirmDelete,
         id: index
       });
+      // root.confirm({
+      //   content: "此操作将永久删除该文件, 是否继续?",
+      //   tip: "警告",
+      //   fn: confirmDelete,
+      //   id: index
+      // });
     };
     const handleDeleteSelected = () => {
       root.confirm({

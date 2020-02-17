@@ -10,10 +10,10 @@
               style="width: 130px;"
             >
               <el-option
-                v-for="option in typeOptions"
-                :key="option.value"
-                :label="option.label"
-                :value="option.value"
+                v-for="option in typeOptions.item"
+                :key="option.id"
+                :label="option.category_name"
+                :value="option.id"
               >
               </el-option>
             </el-select>
@@ -102,6 +102,7 @@
 import { reactive, ref, onMounted, watch } from "@vue/composition-api";
 import InfoDialog from "./dialog/InfoDialog";
 import { global } from "@/utils/globalV3";
+import { common } from "@/api/common";
 
 export default {
   name: "InfoIndex",
@@ -111,24 +112,28 @@ export default {
   // eslint-disable-next-line no-unused-vars
   setup(props, { root }) {
     const { str, confirm } = global();
+    const { category, getCategory } = common();
     watch(() => {
       console.log("str.value", str.value);
     });
+
     const dialogVisible = ref(false);
-    const typeOptions = reactive([
-      {
-        value: 1,
-        label: "国际信息"
-      },
-      {
-        value: 2,
-        label: "国内信息"
-      },
-      {
-        value: 3,
-        label: "行业信息"
-      }
-    ]);
+    const typeOptions = reactive({
+      item: [
+        {
+          id: 1,
+          category_name: "国际信息"
+        },
+        {
+          id: 2,
+          category_name: "国内信息"
+        },
+        {
+          id: 3,
+          category_name: "行业信息"
+        }
+      ]
+    });
     const keywordOptions = reactive([
       {
         value: "id",
@@ -142,7 +147,7 @@ export default {
     const formInline = reactive({
       keywordSelected: "id",
       user: "",
-      typeSelected: 2,
+      typeSelected: null,
       date1: ""
     });
     const onSubmit = () => {
@@ -201,6 +206,17 @@ export default {
     const closeInfoDialog = () => {
       dialogVisible.value = false;
     };
+    watch(
+      () => category.items,
+      value => {
+        console.log("category.items value", value);
+        typeOptions.item = value;
+      }
+    );
+
+    onMounted(() => {
+      getCategory();
+    });
     return {
       dialogVisible,
       closeInfoDialog,

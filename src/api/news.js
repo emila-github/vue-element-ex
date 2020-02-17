@@ -23,3 +23,11 @@ export function DeleteCategory(data) {
     data: data
   });
 }
+// 编辑分类
+export function EditCategory(data) {
+  return service.request({
+    method: "post",
+    url: "/news/editCategory/",
+    data: data
+  });
+}

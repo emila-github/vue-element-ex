@@ -7,11 +7,21 @@
         <el-col :span="8">
           <div class="category-wrap">
             <div class="category" v-for="item in category.datas" :key="item.id">
-              <h4>
+              <div class="h4">
                 <svg-icon icon-class="category-open"></svg-icon>
                 {{ item.category_name }}
                 <div class="button-group">
-                  <el-button size="mini" type="danger" round>编辑</el-button>
+                  <el-button
+                    size="mini"
+                    type="danger"
+                    @click="
+                      editCategory({
+                        categoryName: item.category_name
+                      })
+                    "
+                    round
+                    >编辑</el-button
+                  >
                   <el-button size="mini" type="success" round
                     >添加子级</el-button
                   >
@@ -19,7 +29,7 @@
                     >删除</el-button
                   >
                 </div>
-              </h4>
+              </div>
               <ul v-if="item.children && item.children.length">
                 <li v-for="cItem in item.children" :key="cItem.id">
                   {{ cItem.category_name }}
@@ -33,9 +43,9 @@
           </div>
         </el-col>
         <el-col :span="16">
-          <h4 class="menu-title">
+          <div class="menu-title">
             一级分类编辑
-          </h4>
+          </div>
           <el-form
             label-width="142px"
             class="form-wrap"
@@ -186,6 +196,15 @@ export default {
       });
     };
 
+    const editCategory = ({ categoryName: name }) => {
+      console.log("editCategory", name);
+      categoryFirstInput.value = true;
+      categoryChildrenInput.value = false;
+      categoryFirstInputDisabled.value = false;
+      categoryChildrenInputDisabled.value = true;
+      form.categoryName = name;
+    };
+
     onMounted(() => {
       getCategory();
     });
@@ -200,7 +219,8 @@ export default {
       categoryFirstInputDisabled,
       categoryChildrenInputDisabled,
       category,
-      deleteCategory
+      deleteCategory,
+      editCategory
     };
   }
 };
@@ -239,7 +259,7 @@ export default {
       width: 32px;
       border-left: 1px dotted #000;
     }
-    h4 {
+    .h4 {
       padding-left: 40px;
       position: relative;
     }
@@ -265,7 +285,7 @@ export default {
       }
     }
     li,
-    h4 {
+    .h4 {
       @include webkit(transition, all 0.3s ease 0s);
       &:hover {
         background-color: #f3f3f3;

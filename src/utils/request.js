@@ -1,5 +1,6 @@
 import axios from "axios";
 import { Message } from "element-ui";
+import { getToken, getUsername } from "@/utils/app";
 const BASEURL = process.env.NODE_ENV === "production" ? "" : "/devApi";
 const service = axios.create({
   baseURL: BASEURL,
@@ -10,6 +11,8 @@ const service = axios.create({
 service.interceptors.request.use(
   function(config) {
     console.log("service.interceptors.request config", config);
+    config.headers["Tokey"] = getToken();
+    config.headers["UserName"] = getUsername();
     // 在发送请求之前做些什么
     return config;
   },

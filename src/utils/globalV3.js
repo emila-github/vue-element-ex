@@ -13,7 +13,7 @@ export function global() {
     })
       .then(() => {
         str.value = "删除";
-        params.fn && params.fn(params.id);
+        params.fn && params.fn(params.datas || {});
         MessageBox({
           type: "success",
           message: "删除成功!"

@@ -15,7 +15,9 @@
                   <el-button size="mini" type="success" round
                     >添加子级</el-button
                   >
-                  <el-button size="mini" round>删除</el-button>
+                  <el-button size="mini" @click="deleteCategory(item.id)" round
+                    >删除</el-button
+                  >
                 </div>
               </h4>
               <ul v-if="item.children && item.children.length">
@@ -41,10 +43,16 @@
             ref="ruleForm"
           >
             <el-form-item label="一级分类名称：" v-if="categoryFirstInput">
-              <el-input v-model="form.categoryName"></el-input>
+              <el-input
+                v-model="form.categoryName"
+                :disabled="categoryFirstInputDisabled"
+              ></el-input>
             </el-form-item>
             <el-form-item label="二级分类名称：" v-if="categoryChildrenInput">
-              <el-input v-model="form.resecCategoryName"></el-input>
+              <el-input
+                v-model="form.resecCategoryName"
+                :disabled="categoryChildrenInputDisabled"
+              ></el-input>
             </el-form-item>
             <el-form-item>
               <el-button
@@ -64,11 +72,13 @@
 <script>
 // eslint-disable-next-line no-unused-vars
 import { reactive, ref, onMounted, watch } from "@vue/composition-api";
-import { AddFirstCategory, GetCategory } from "@/api/news";
+import { AddFirstCategory, GetCategory, DeleteCategory } from "@/api/news";
+import { global } from "@/utils/globalV3";
 export default {
   name: "InfoCategory",
   // eslint-disable-next-line no-unused-vars
   setup(props, { root, refs }) {
+    const { confirm } = global();
     const form = reactive({
       categoryName: "",
       resecCategoryName: ""
@@ -96,6 +106,8 @@ export default {
     const categoryFirstInput = ref(true);
     const categoryChildrenInput = ref(false);
     const submitLoadingStatus = ref(false);
+    const categoryFirstInputDisabled = ref(true);
+    const categoryChildrenInputDisabled = ref(true);
 
     const submit = () => {
       if (!form.categoryName) {
@@ -132,12 +144,45 @@ export default {
     const addFirst = () => {
       categoryFirstInput.value = true;
       categoryChildrenInput.value = false;
+      categoryFirstInputDisabled.value = false;
+      categoryChildrenInputDisabled.value = true;
     };
 
     const getCategory = () => {
       GetCategory().then(response => {
         console.log(response);
         category.datas = response.data.data.data;
+      });
+    };
+
+    const deleteCategory = id => {
+      console.log("deleteCategory");
+      confirm({
+        content: "此操作将永久删除该文件, 是否继续?",
+        tip: "警告",
+        fn: datas => {
+          DeleteCategory({ categoryId: datas.id })
+            .then(response => {
+              console.log(response);
+              // 索引删除法
+              // const index = category.datas.findIndex(item => item.id === id);
+              // if (index !== -1) {
+              //   category.datas.splice(index, 1);
+              // }
+
+              // 过滤法删除
+              category.datas = category.datas.filter(item => item.id !== id);
+
+              root.$message({
+                message: response.data.message,
+                type: "success"
+              });
+            })
+            .catch(error => {
+              console.log(error);
+            });
+        },
+        datas: { id }
       });
     };
 
@@ -152,7 +197,10 @@ export default {
       addFirst,
       categoryFirstInput,
       categoryChildrenInput,
-      category
+      categoryFirstInputDisabled,
+      categoryChildrenInputDisabled,
+      category,
+      deleteCategory
     };
   }
 };

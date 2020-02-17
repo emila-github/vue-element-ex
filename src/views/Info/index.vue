@@ -171,8 +171,8 @@ export default {
         address: "上海市普陀区金沙江路 1516 弄"
       }
     ]);
-    const confirmDelete = id => {
-      console.log("todo confirmDelete", id);
+    const confirmDelete = datas => {
+      console.log("todo confirmDelete", datas.id);
     };
     const handleEdit = (index, row) => {
       console.log(index, row);
@@ -183,7 +183,7 @@ export default {
         content: "此操作将永久删除该文件, 是否继续?",
         tip: "警告",
         fn: confirmDelete,
-        id: index
+        datas: { id: index }
       });
       // root.confirm({
       //   content: "此操作将永久删除该文件, 是否继续?",

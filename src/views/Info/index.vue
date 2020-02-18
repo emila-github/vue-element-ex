@@ -93,7 +93,10 @@
 
     <!-- <InfoDialog :dialogVisible="dialogVisible" @close="closeInfoDialog" /> -->
     <!-- .sync 修饰符   子组件通过 this.$emit("update:dialogVisible", false); 修改父组件值-->
-    <InfoDialog :dialogVisible.sync="dialogVisible" />
+    <InfoDialog
+      :dialogVisible.sync="dialogVisible"
+      :category="typeOptions.item"
+    />
   </div>
 </template>
 

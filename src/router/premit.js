@@ -1,7 +1,7 @@
-import router from "./index";
-import store from "../store/index";
-import { getToken, remmoveToken, remmoveUsername } from "@/utils/app";
-const whiteRouter = ["/login-v3"]; // 路由白名单 不需要验证登录的页面
+import router from './index'
+import store from '../store/index'
+import { getToken, remmoveToken, remmoveUsername } from '@/utils/app'
+const whiteRouter = ['/login-v3'] // 路由白名单 不需要验证登录的页面
 
 // 路由守卫
 router.beforeEach((to, from, next) => {
@@ -12,28 +12,33 @@ router.beforeEach((to, from, next) => {
    */
   if (getToken()) {
     // TODO 路由动态添加，分配菜单，每个角色分配不同的菜单
-    console.log("getToken 存在");
-    if (to.path === "/login-v3") {
-      remmoveToken();
-      remmoveUsername();
-      store.commit("app/SET_TOKEN", "");
-      store.commit("app/SET_USERNAME", "");
-      next();
+    console.log('getToken 存在')
+    if (to.path === '/login-v3') {
+      let a = null
+      if (a) {
+        // 临时屏蔽
+        remmoveToken()
+        remmoveUsername()
+        store.commit('app/SET_TOKEN', '')
+        store.commit('app/SET_USERNAME', '')
+      }
+
+      next()
     } else {
-      next();
+      next()
     }
   } else {
-    console.log("getToken 不存在");
+    console.log('getToken 不存在')
     if (whiteRouter.includes(to.path)) {
       // 不在白名单
-      next();
+      next()
     } else {
-      next("/login-v3");
+      next('/login-v3')
     }
   }
-  console.log("路由守卫");
-  console.log("进入的页面（下一个页面）", to);
-  console.log("离开之前的页面（上一个页面）", from);
-  console.log(next);
-  next();
-});
+  console.log('路由守卫')
+  console.log('进入的页面（下一个页面）', to)
+  console.log('离开之前的页面（上一个页面）', from)
+  console.log(next)
+  next()
+})

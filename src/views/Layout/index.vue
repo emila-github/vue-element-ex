@@ -7,25 +7,25 @@
 </template>
 
 <script>
-import { onMounted, computed } from "@vue/composition-api";
-import LayoutHeader from "./Header";
-import LayoutMain from "./Main";
-import LayoutNav from "./Nav";
+import { onMounted, computed } from '@vue/composition-api'
+import LayoutHeader from './Header'
+import LayoutMain from './Main'
+import LayoutNav from './Nav'
 export default {
-  name: "layout",
+  name: 'layout',
   components: {
     LayoutHeader,
     LayoutMain,
-    LayoutNav
+    LayoutNav,
   },
   setup(props, { root }) {
     const menuStatus = computed(() => {
-      return root.$store.state.app.isCollapse;
-    });
-    onMounted(() => {});
-    return { menuStatus };
-  }
-};
+      return root.$store.state.app.isCollapse
+    })
+    onMounted(() => {})
+    return { menuStatus }
+  },
+}
 </script>
 
 <style lang="scss" scoped></style>

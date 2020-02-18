@@ -5,41 +5,41 @@
 </template>
 
 <script>
-import { onMounted, computed } from "@vue/composition-api";
+import { onMounted, computed } from '@vue/composition-api'
 export default {
-  name: "svgIcon",
+  name: 'svgIcon',
   props: {
     iconClass: {
       type: String,
-      default: "",
-      required: true
+      default: '',
+      required: true,
     },
     className: {
       type: String,
-      default: ""
-    }
+      default: '',
+    },
   },
   setup(props) {
-    console.log("svgicon props", props);
+    console.log('svgicon props', props)
 
     const iconName = computed(() => {
-      return `#icon-${props.iconClass}`;
-    });
+      return `#icon-${props.iconClass}`
+    })
     const svgClass = computed(() => {
       if (props.className) {
-        return `svg-icon ${props.className}`;
+        return `svg-icon ${props.className}`
       } else {
-        return `svg-icon`;
+        return `svg-icon`
       }
-    });
+    })
 
-    onMounted(() => {});
+    onMounted(() => {})
     return {
       iconName,
-      svgClass
-    };
-  }
-};
+      svgClass,
+    }
+  },
+}
 </script>
 
 <style lang="scss" scoped>

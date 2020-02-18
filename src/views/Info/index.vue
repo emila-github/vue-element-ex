@@ -4,11 +4,7 @@
       <el-row :gutter="20">
         <el-col :span="22">
           <el-form-item label="类型">
-            <el-select
-              v-model="formInline.typeSelected"
-              placeholder="类型"
-              style="width: 130px;"
-            >
+            <el-select v-model="formInline.typeSelected" placeholder="类型" style="width: 130px;">
               <el-option
                 v-for="option in typeOptions.item"
                 :key="option.id"
@@ -29,11 +25,7 @@
             </el-date-picker>
           </el-form-item>
           <el-form-item label="关键字">
-            <el-select
-              v-model="formInline.keywordSelected"
-              placeholder="关键字"
-              style="width: 100px;"
-            >
+            <el-select v-model="formInline.keywordSelected" placeholder="关键字" style="width: 100px;">
               <el-option
                 v-for="option in keywordOptions"
                 :key="option.value"
@@ -50,176 +42,160 @@
         </el-col>
         <el-col :span="2" class="add-area">
           <el-form-item>
-            <el-button type="success" @click="dialogVisible = true"
-              >添加</el-button
-            >
+            <el-button type="success" @click="dialogVisible = true">添加</el-button>
           </el-form-item>
         </el-col>
       </el-row>
     </el-form>
 
     <el-table :data="tableData" border style="width: 100%">
-      <el-table-column type="selection" width="45" align="center">
-      </el-table-column>
+      <el-table-column type="selection" width="45" align="center"> </el-table-column>
       <el-table-column prop="date" label="日期" width="180"> </el-table-column>
       <el-table-column prop="name" label="姓名" width="180"> </el-table-column>
       <el-table-column prop="address" label="地址"> </el-table-column>
       <el-table-column label="操作" width="180" align="center">
         <template slot-scope="scope">
-          <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"
-            >编辑</el-button
-          >
-          <el-button
-            size="mini"
-            type="danger"
-            @click="handleDelete(scope.$index, scope.row)"
-            >删除</el-button
-          >
+          <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+          <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
 
     <el-row :gutter="20" align="middle" style="margin-top: 30px;">
       <el-col :span="2">
-        <el-button size="small" @click="handleDeleteSelected"
-          >批量删除</el-button
-        >
+        <el-button size="small" @click="handleDeleteSelected">批量删除</el-button>
       </el-col>
       <el-col :span="22" class="pagination-bar">
-        <el-pagination background layout="prev, pager, next" :total="1000">
-        </el-pagination>
+        <el-pagination background layout="prev, pager, next" :total="1000"> </el-pagination>
       </el-col>
     </el-row>
 
     <!-- <InfoDialog :dialogVisible="dialogVisible" @close="closeInfoDialog" /> -->
     <!-- .sync 修饰符   子组件通过 this.$emit("update:dialogVisible", false); 修改父组件值-->
-    <InfoDialog
-      :dialogVisible.sync="dialogVisible"
-      :category="typeOptions.item"
-    />
+    <InfoDialog :dialogVisible.sync="dialogVisible" :category="typeOptions.item" />
   </div>
 </template>
 
 <script>
 // eslint-disable-next-line no-unused-vars
-import { reactive, ref, onMounted, watch } from "@vue/composition-api";
-import InfoDialog from "./dialog/InfoDialog";
-import { global } from "@/utils/globalV3";
-import { common } from "@/api/common";
+import { reactive, ref, onMounted, watch } from '@vue/composition-api'
+import InfoDialog from './dialog/InfoDialog'
+import { global } from '@/utils/globalV3'
+import { common } from '@/api/common'
 
 export default {
-  name: "InfoIndex",
+  name: 'InfoIndex',
   components: {
-    InfoDialog
+    InfoDialog,
   },
   // eslint-disable-next-line no-unused-vars
   setup(props, { root }) {
-    const { str, confirm } = global();
-    const { category, getCategory } = common();
+    const { str, confirm } = global()
+    const { category, getCategory } = common()
     watch(() => {
-      console.log("str.value", str.value);
-    });
+      console.log('str.value', str.value)
+    })
 
-    const dialogVisible = ref(false);
+    const dialogVisible = ref(false)
     const typeOptions = reactive({
       item: [
         {
           id: 1,
-          category_name: "国际信息"
+          category_name: '国际信息',
         },
         {
           id: 2,
-          category_name: "国内信息"
+          category_name: '国内信息',
         },
         {
           id: 3,
-          category_name: "行业信息"
-        }
-      ]
-    });
+          category_name: '行业信息',
+        },
+      ],
+    })
     const keywordOptions = reactive([
       {
-        value: "id",
-        label: "ID"
+        value: 'id',
+        label: 'ID',
       },
       {
-        value: "title",
-        label: "标题"
-      }
-    ]);
+        value: 'title',
+        label: '标题',
+      },
+    ])
     const formInline = reactive({
-      keywordSelected: "id",
-      user: "",
+      keywordSelected: 'id',
+      user: '',
       typeSelected: null,
-      date1: ""
-    });
+      date1: '',
+    })
     const onSubmit = () => {
-      console.log("submit!");
-    };
+      console.log('submit!')
+    }
 
     const tableData = reactive([
       {
-        date: "2016-05-02",
-        name: "王小虎",
-        address: "上海市普陀区金沙江路 1518 弄"
+        date: '2016-05-02',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄',
       },
       {
-        date: "2016-05-04",
-        name: "王小虎",
-        address: "上海市普陀区金沙江路 1517 弄"
+        date: '2016-05-04',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1517 弄',
       },
       {
-        date: "2016-05-01",
-        name: "王小虎",
-        address: "上海市普陀区金沙江路 1519 弄"
+        date: '2016-05-01',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1519 弄',
       },
       {
-        date: "2016-05-03",
-        name: "王小虎",
-        address: "上海市普陀区金沙江路 1516 弄"
-      }
-    ]);
+        date: '2016-05-03',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1516 弄',
+      },
+    ])
     const confirmDelete = datas => {
-      console.log("todo confirmDelete", datas.id);
-    };
+      console.log('todo confirmDelete', datas.id)
+    }
     const handleEdit = (index, row) => {
-      console.log(index, row);
-    };
+      console.log(index, row)
+    }
     const handleDelete = (index, row) => {
-      console.log(index, row);
+      console.log(index, row)
       confirm({
-        content: "此操作将永久删除该文件, 是否继续?",
-        tip: "警告",
+        content: '此操作将永久删除该文件, 是否继续?',
+        tip: '警告',
         fn: confirmDelete,
-        datas: { id: index }
-      });
+        datas: { id: index },
+      })
       // root.confirm({
       //   content: "此操作将永久删除该文件, 是否继续?",
       //   tip: "警告",
       //   fn: confirmDelete,
       //   id: index
       // });
-    };
+    }
     const handleDeleteSelected = () => {
       root.confirm({
-        content: "是否删除选中记录, 是否继续?"
-      });
-    };
+        content: '是否删除选中记录, 是否继续?',
+      })
+    }
 
     const closeInfoDialog = () => {
-      dialogVisible.value = false;
-    };
+      dialogVisible.value = false
+    }
     watch(
       () => category.items,
       value => {
-        console.log("category.items value", value);
-        typeOptions.item = value;
-      }
-    );
+        console.log('category.items value', value)
+        typeOptions.item = value
+      },
+    )
 
     onMounted(() => {
-      getCategory();
-    });
+      getCategory()
+    })
     return {
       dialogVisible,
       closeInfoDialog,
@@ -230,10 +206,10 @@ export default {
       tableData,
       handleEdit,
       handleDelete,
-      handleDeleteSelected
-    };
-  }
-};
+      handleDeleteSelected,
+    }
+  },
+}
 </script>
 
 <style lang="scss" scoped>

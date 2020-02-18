@@ -13,16 +13,11 @@
       <template v-for="item in routers">
         <el-submenu v-if="!item.hidden" :key="item.id" :index="item.path">
           <template slot="title">
-            <svg-icon
-              :iconClass="item.meta.icon"
-              className="menu font24"
-            ></svg-icon>
+            <svg-icon :iconClass="item.meta.icon" className="menu font24"></svg-icon>
             <span slot="title">{{ item.meta.name }}</span>
           </template>
           <template v-for="subItem in item.children">
-            <el-menu-item :key="subItem.id" :index="subItem.path"
-              >{{ subItem.meta.name }}
-            </el-menu-item>
+            <el-menu-item :key="subItem.id" :index="subItem.path">{{ subItem.meta.name }} </el-menu-item>
           </template>
         </el-submenu>
       </template>
@@ -31,22 +26,22 @@
 </template>
 
 <script>
-import { reactive, onMounted, computed } from "@vue/composition-api";
+import { reactive, onMounted, computed } from '@vue/composition-api'
 export default {
-  name: "navWrap",
+  name: 'navWrap',
   setup(props, { root }) {
-    const routers = reactive(root.$router.options.routes);
-    console.log(routers);
+    const routers = reactive(root.$router.options.routes)
+    console.log(routers)
     // const isCollapse = ref(false);
     // computed 监听
-    const isCollapse = computed(() => root.$store.state.app.isCollapse);
+    const isCollapse = computed(() => root.$store.state.app.isCollapse)
     // 函数
     const handleOpen = (key, keyPath) => {
-      console.log(key, keyPath);
-    };
+      console.log(key, keyPath)
+    }
     const handleClose = (key, keyPath) => {
-      console.log(key, keyPath);
-    };
+      console.log(key, keyPath)
+    }
 
     // // 获取state
     // console.log("==", root.$store.state.isCollapse);
@@ -57,20 +52,20 @@ export default {
 
     // 生命周期挂在完成后
     onMounted(() => {
-      console.log("onMounted 生命周期挂在完成后");
-    });
+      console.log('onMounted 生命周期挂在完成后')
+    })
     return {
       routers,
       isCollapse,
       handleOpen,
-      handleClose
-    };
-  }
-};
+      handleClose,
+    }
+  },
+}
 </script>
 
 <style lang="scss" scoped>
-@import "../../styles/config.scss";
+@import '../../styles/config.scss';
 #NavWrap {
   position: fixed;
   top: 0;

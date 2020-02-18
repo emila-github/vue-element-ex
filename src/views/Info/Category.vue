@@ -16,18 +16,14 @@
                     type="danger"
                     @click="
                       editCategory({
-                        categoryName: item.category_name
+                        categoryName: item.category_name,
                       })
                     "
                     round
                     >编辑</el-button
                   >
-                  <el-button size="mini" type="success" round
-                    >添加子级</el-button
-                  >
-                  <el-button size="mini" @click="deleteCategory(item.id)" round
-                    >删除</el-button
-                  >
+                  <el-button size="mini" type="success" round>添加子级</el-button>
+                  <el-button size="mini" @click="deleteCategory(item.id)" round>删除</el-button>
                 </div>
               </div>
               <ul v-if="item.children && item.children.length">
@@ -46,31 +42,15 @@
           <div class="menu-title">
             一级分类编辑
           </div>
-          <el-form
-            label-width="142px"
-            class="form-wrap"
-            :model="form"
-            ref="ruleForm"
-          >
+          <el-form label-width="142px" class="form-wrap" :model="form" ref="ruleForm">
             <el-form-item label="一级分类名称：" v-if="categoryFirstInput">
-              <el-input
-                v-model="form.categoryName"
-                :disabled="categoryFirstInputDisabled"
-              ></el-input>
+              <el-input v-model="form.categoryName" :disabled="categoryFirstInputDisabled"></el-input>
             </el-form-item>
             <el-form-item label="二级分类名称：" v-if="categoryChildrenInput">
-              <el-input
-                v-model="form.resecCategoryName"
-                :disabled="categoryChildrenInputDisabled"
-              ></el-input>
+              <el-input v-model="form.resecCategoryName" :disabled="categoryChildrenInputDisabled"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button
-                type="danger"
-                @click="submit"
-                :loading="submitLoadingStatus"
-                >确定</el-button
-              >
+              <el-button type="danger" @click="submit" :loading="submitLoadingStatus">确定</el-button>
             </el-form-item>
           </el-form>
         </el-col>
@@ -81,18 +61,18 @@
 
 <script>
 // eslint-disable-next-line no-unused-vars
-import { reactive, ref, onMounted, watch } from "@vue/composition-api";
-import { AddFirstCategory, GetCategory, DeleteCategory } from "@/api/news";
-import { global } from "@/utils/globalV3";
+import { reactive, ref, onMounted, watch } from '@vue/composition-api'
+import { AddFirstCategory, GetCategory, DeleteCategory } from '@/api/news'
+import { global } from '@/utils/globalV3'
 export default {
-  name: "InfoCategory",
+  name: 'InfoCategory',
   // eslint-disable-next-line no-unused-vars
   setup(props, { root, refs }) {
-    const { confirm } = global();
+    const { confirm } = global()
     const form = reactive({
-      categoryName: "",
-      resecCategoryName: ""
-    });
+      categoryName: '',
+      resecCategoryName: '',
+    })
 
     const category = reactive({
       datas: [
@@ -110,70 +90,70 @@ export default {
         //     }
         //   ]
         // }
-      ]
-    });
+      ],
+    })
 
-    const categoryFirstInput = ref(true);
-    const categoryChildrenInput = ref(false);
-    const submitLoadingStatus = ref(false);
-    const categoryFirstInputDisabled = ref(true);
-    const categoryChildrenInputDisabled = ref(true);
+    const categoryFirstInput = ref(true)
+    const categoryChildrenInput = ref(false)
+    const submitLoadingStatus = ref(false)
+    const categoryFirstInputDisabled = ref(true)
+    const categoryChildrenInputDisabled = ref(true)
 
     const submit = () => {
       if (!form.categoryName) {
         root.$message({
-          message: "分类名称不能为空",
-          type: "error"
-        });
-        return false;
+          message: '分类名称不能为空',
+          type: 'error',
+        })
+        return false
       }
-      submitLoadingStatus.value = true;
+      submitLoadingStatus.value = true
       AddFirstCategory({ categoryName: form.categoryName })
         .then(response => {
-          console.log(response);
+          console.log(response)
           if (response.data.resCode === 0) {
             root.$message({
               message: response.data.message,
-              type: "success"
-            });
-            category.datas.push(response.data.data);
-            submitLoadingStatus.value = false;
+              type: 'success',
+            })
+            category.datas.push(response.data.data)
+            submitLoadingStatus.value = false
             // refs.ruleForm.resetFields();
 
-            form.categoryName = "";
-            form.resecCategoryName = "";
+            form.categoryName = ''
+            form.resecCategoryName = ''
           }
         })
         .catch(error => {
-          console.log(error);
-          submitLoadingStatus.value = false;
-          form.categoryName = "";
-          form.resecCategoryName = "";
-        });
-    };
+          console.log(error)
+          submitLoadingStatus.value = false
+          form.categoryName = ''
+          form.resecCategoryName = ''
+        })
+    }
     const addFirst = () => {
-      categoryFirstInput.value = true;
-      categoryChildrenInput.value = false;
-      categoryFirstInputDisabled.value = false;
-      categoryChildrenInputDisabled.value = true;
-    };
+      categoryFirstInput.value = true
+      categoryChildrenInput.value = false
+      categoryFirstInputDisabled.value = false
+      categoryChildrenInputDisabled.value = true
+    }
 
     const getCategory = () => {
       GetCategory().then(response => {
-        console.log(response);
-        category.datas = response.data.data.data;
-      });
-    };
+        console.log(response)
+        category.datas = response.data.data.data
+      })
+    }
 
     const deleteCategory = id => {
-      console.log("deleteCategory");
+      console.log('deleteCategory')
       confirm({
-        content: "此操作将永久删除该文件, 是否继续?",
-        tip: "警告",
+        content: '此操作将永久删除该文件, 是否继续?',
+        tip: '警告',
         fn: datas => {
           DeleteCategory({ categoryId: datas.id })
             .then(response => {
-              console.log(response);
+              console.log(response)
               // 索引删除法
               // const index = category.datas.findIndex(item => item.id === id);
               // if (index !== -1) {
@@ -181,33 +161,33 @@ export default {
               // }
 
               // 过滤法删除
-              category.datas = category.datas.filter(item => item.id !== id);
+              category.datas = category.datas.filter(item => item.id !== id)
 
               root.$message({
                 message: response.data.message,
-                type: "success"
-              });
+                type: 'success',
+              })
             })
             .catch(error => {
-              console.log(error);
-            });
+              console.log(error)
+            })
         },
-        datas: { id }
-      });
-    };
+        datas: { id },
+      })
+    }
 
     const editCategory = ({ categoryName: name }) => {
-      console.log("editCategory", name);
-      categoryFirstInput.value = true;
-      categoryChildrenInput.value = false;
-      categoryFirstInputDisabled.value = false;
-      categoryChildrenInputDisabled.value = true;
-      form.categoryName = name;
-    };
+      console.log('editCategory', name)
+      categoryFirstInput.value = true
+      categoryChildrenInput.value = false
+      categoryFirstInputDisabled.value = false
+      categoryChildrenInputDisabled.value = true
+      form.categoryName = name
+    }
 
     onMounted(() => {
-      getCategory();
-    });
+      getCategory()
+    })
 
     return {
       form,
@@ -220,14 +200,14 @@ export default {
       categoryChildrenInputDisabled,
       category,
       deleteCategory,
-      editCategory
-    };
-  }
-};
+      editCategory,
+    }
+  },
+}
 </script>
 
 <style lang="scss" scoped>
-@import "../../styles/config.scss";
+@import '../../styles/config.scss';
 .line {
   width: calc(100% + 60px);
   height: 1px;
@@ -251,7 +231,7 @@ export default {
     line-height: 44px;
     position: relative;
     &:before {
-      content: "";
+      content: '';
       position: absolute;
       left: 22px;
       top: 0;
@@ -276,7 +256,7 @@ export default {
       margin-left: 24px;
       position: relative;
       &:before {
-        content: "";
+        content: '';
         position: absolute;
         left: 0px;
         top: 23px;

@@ -1,11 +1,7 @@
 <template>
   <div id="HeaderWarp">
     <div @click="handlerNarBar">
-      <svg-icon
-        class="nav-bar-icon"
-        iconClass="menu"
-        className="menu"
-      ></svg-icon>
+      <svg-icon class="nav-bar-icon" iconClass="menu" className="menu"></svg-icon>
     </div>
 
     <div class="header-right">
@@ -17,38 +13,38 @@
   </div>
 </template>
 <script>
-import { onMounted, computed } from "@vue/composition-api";
+import { onMounted, computed } from '@vue/composition-api'
 export default {
-  name: "headerWarp",
+  name: 'headerWarp',
   // eslint-disable-next-line no-unused-vars
   setup(props, { root }) {
-    const username = computed(() => root.$store.state.app.username);
+    const username = computed(() => root.$store.state.app.username)
     const handlerNarBar = () => {
-      root.$store.commit("app/SET_COLLAPSE");
+      root.$store.commit('app/SET_COLLAPSE')
       // root.$store.dispatch("setMenuStatus", { test: "test1" });
-    };
+    }
     const handlerExit = () => {
-      root.$store.dispatch("app/exit").then(() => {
+      root.$store.dispatch('app/exit').then(() => {
         root.$router.push({
-          name: "loginV3"
-        });
-      });
-    };
+          name: 'loginV3',
+        })
+      })
+    }
     const test = () => {
-      console.log("test");
-    };
-    onMounted(() => {});
+      console.log('test')
+    }
+    onMounted(() => {})
     return {
       username,
       handlerNarBar,
       handlerExit,
-      test
-    };
-  }
-};
+      test,
+    }
+  },
+}
 </script>
 <style lang="scss" scoped>
-@import "../../styles/config.scss";
+@import '../../styles/config.scss';
 
 #HeaderWarp {
   position: fixed;

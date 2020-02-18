@@ -10,12 +10,7 @@
     <el-form :model="form">
       <el-form-item label="类型" :label-width="formLabelWidth">
         <el-select v-model="form.category" placeholder="请选择活动区域">
-          <el-option
-            v-for="item in categoryOptions.items"
-            :label="item.category_name"
-            :value="item.id"
-            :key="item.id"
-          >
+          <el-option v-for="item in categoryOptions.items" :label="item.category_name" :value="item.id" :key="item.id">
           </el-option>
         </el-select>
       </el-form-item>
@@ -35,58 +30,58 @@
 
 <script>
 // eslint-disable-next-line no-unused-vars
-import { reactive, ref, onMounted, watch } from "@vue/composition-api";
-import { AddInfo } from "@/api/news";
+import { reactive, ref, onMounted, watch } from '@vue/composition-api'
+import { AddInfo } from '@/api/news'
 export default {
-  name: "InfoDailog",
+  name: 'InfoDailog',
   props: {
     dialogVisible: {
       type: Boolean,
-      default: true
+      default: true,
     },
     category: {
       type: Array,
-      default: () => []
-    }
+      default: () => [],
+    },
   },
   setup(props, { root, emit }) {
-    const dialogVisibleFlag = ref(false);
-    const formLabelWidth = ref("70px");
+    const dialogVisibleFlag = ref(false)
+    const formLabelWidth = ref('70px')
 
     const form = reactive({
-      category: "",
-      title: "",
-      content: ""
-    });
+      category: '',
+      title: '',
+      content: '',
+    })
 
     const categoryOptions = reactive({
-      items: []
-    });
+      items: [],
+    })
 
     const submit = () => {
       let requestData = {
         category: form.category,
         title: form.title,
-        content: form.content
-      };
+        content: form.content,
+      }
       AddInfo(requestData).then(response => {
-        let { resCode, message } = response.data;
+        let { resCode, message } = response.data
         if (resCode === 0) {
           root.$message({
             message: message,
-            type: "success"
-          });
+            type: 'success',
+          })
         }
-        console.log(response);
-      });
-      dialogVisibleFlag.value = false;
-    };
+        console.log(response)
+      })
+      dialogVisibleFlag.value = false
+    }
 
     // methods
     const opened = () => {
-      console.log("props.category", props.category);
-      categoryOptions.items = props.category;
-    };
+      console.log('props.category', props.category)
+      categoryOptions.items = props.category
+    }
     const close = () => {
       // 方法一：
       // 回调要做逻辑处理时使用
@@ -96,20 +91,20 @@ export default {
       //  不处理逻辑时可以用.sync修饰符来修改父组件值
       //  父组件通过 .sync 修饰符授权子组件更新父组件值
       //  <InfoDialog :dialogVisible.sync="dialogVisible" />
-      emit("update:dialogVisible", false);
-    };
+      emit('update:dialogVisible', false)
+    }
     const handleClose = done => {
       root
-        .$confirm("确认关闭？")
+        .$confirm('确认关闭？')
         .then(() => {
-          done();
+          done()
         })
-        .catch(() => {});
-    };
+        .catch(() => {})
+    }
     // 监听
     watch(() => {
-      dialogVisibleFlag.value = props.dialogVisible;
-    });
+      dialogVisibleFlag.value = props.dialogVisible
+    })
     return {
       dialogVisibleFlag,
       formLabelWidth,
@@ -118,10 +113,10 @@ export default {
       handleClose,
       opened,
       categoryOptions,
-      submit
-    };
-  }
-};
+      submit,
+    }
+  },
+}
 </script>
 
 <style lang="scss" scoped>

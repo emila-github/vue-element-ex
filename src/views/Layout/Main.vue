@@ -9,11 +9,11 @@
 </template>
 
 <script>
-export default {};
+export default {}
 </script>
 
 <style lang="scss" scoped>
-@import "../../styles/config.scss";
+@import '../../styles/config.scss';
 #MainWrap {
   height: 100vh;
   background-color: #f7f7f7;

@@ -11,7 +11,7 @@ export default {
         center: true,
       })
         .then(() => {
-          params.fn && params.fn(params.id)
+          params.fn && params.fn(params.datas || {})
           MessageBox({
             type: 'success',
             message: '删除成功!',
@@ -20,7 +20,7 @@ export default {
         .catch(() => {
           MessageBox({
             type: 'info',
-            message: '已取消删除',
+            message: '已取消删除-v2',
           })
         })
     }

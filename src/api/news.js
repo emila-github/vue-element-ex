@@ -1,9 +1,25 @@
 import service from '@/utils/request'
+// 列表
+export function GetList(data) {
+  return service.request({
+    method: 'post',
+    url: '/news/getList/',
+    data: data,
+  })
+}
 // 新增信息
 export function AddInfo(data) {
   return service.request({
     method: 'post',
     url: '/news/add/',
+    data: data,
+  })
+}
+// 删除信息
+export function DeleteInfo(data) {
+  return service.request({
+    method: 'post',
+    url: '/news/deleteInfo/',
     data: data,
   })
 }

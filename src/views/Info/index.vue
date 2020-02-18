@@ -48,11 +48,18 @@
       </el-row>
     </el-form>
 
-    <el-table :data="tableData" border style="width: 100%">
+    <el-table
+      :data="tableData.item"
+      border
+      style="width: 100%"
+      v-loading="loadingData"
+      @selection-change="handleSelectionChange"
+    >
       <el-table-column type="selection" width="45" align="center"> </el-table-column>
-      <el-table-column prop="date" label="日期" width="180"> </el-table-column>
-      <el-table-column prop="name" label="姓名" width="180"> </el-table-column>
-      <el-table-column prop="address" label="地址"> </el-table-column>
+      <el-table-column prop="title" label="标题" width="180"> </el-table-column>
+      <el-table-column prop="createDate" :formatter="toTime" label="创建时间" width="180"> </el-table-column>
+      <el-table-column prop="category" :formatter="toCategory" label="类型" width="180"> </el-table-column>
+      <el-table-column prop="content" label="内容"> </el-table-column>
       <el-table-column label="操作" width="180" align="center">
         <template slot-scope="scope">
           <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
@@ -66,7 +73,16 @@
         <el-button size="small" @click="handleDeleteSelected">批量删除</el-button>
       </el-col>
       <el-col :span="22" class="pagination-bar">
-        <el-pagination background layout="prev, pager, next" :total="1000"> </el-pagination>
+        <el-pagination
+          background
+          layout="total, prev, pager, next"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page.sync="page.currentPage"
+          :total="total"
+          :page-size="page.pageSize"
+        >
+        </el-pagination>
       </el-col>
     </el-row>
 
@@ -79,8 +95,11 @@
 <script>
 // eslint-disable-next-line no-unused-vars
 import { reactive, ref, onMounted, watch } from '@vue/composition-api'
+import { GetList, DeleteInfo } from '@/api/news'
 import InfoDialog from './dialog/InfoDialog'
 import { global } from '@/utils/globalV3'
+// eslint-disable-next-line no-unused-vars
+import { timestampToTime } from '@/utils/common'
 import { common } from '@/api/common'
 
 export default {
@@ -92,6 +111,14 @@ export default {
   setup(props, { root }) {
     const { str, confirm } = global()
     const { category, getCategory } = common()
+    const total = ref(0)
+    const page = reactive({
+      pageSize: 2,
+      currentPage: 1,
+    })
+    let currentSelectionIds = ref([])
+    const loadingData = ref(false)
+
     watch(() => {
       console.log('str.value', str.value)
     })
@@ -133,30 +160,28 @@ export default {
       console.log('submit!')
     }
 
-    const tableData = reactive([
-      {
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄',
-      },
-      {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1517 弄',
-      },
-      {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄',
-      },
-      {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1516 弄',
-      },
-    ])
+    const tableData = reactive({
+      item: [
+        {
+          createDate: '2016-05-02',
+          title: '王小虎',
+          content: '上海市普陀区金沙江路 1518 弄',
+        },
+      ],
+    })
     const confirmDelete = datas => {
-      console.log('todo confirmDelete', datas.id)
+      console.log('todo confirmDelete', datas.ids)
+      DeleteInfo({ id: datas.ids }).then(response => {
+        let { resCode, message } = response.data
+        if (resCode === 0) {
+          root.$message({
+            message: message,
+            type: 'success',
+          })
+          getList()
+        }
+        console.log(response)
+      })
     }
     const handleEdit = (index, row) => {
       console.log(index, row)
@@ -167,7 +192,7 @@ export default {
         content: '此操作将永久删除该文件, 是否继续?',
         tip: '警告',
         fn: confirmDelete,
-        datas: { id: index },
+        datas: { ids: [row.id] },
       })
       // root.confirm({
       //   content: "此操作将永久删除该文件, 是否继续?",
@@ -179,11 +204,62 @@ export default {
     const handleDeleteSelected = () => {
       root.confirm({
         content: '是否删除选中记录, 是否继续?',
+        fn: confirmDelete,
+        datas: { ids: currentSelectionIds.value },
       })
+    }
+
+    const handleSelectionChange = val => {
+      let ids = val.map(item => item.id)
+      currentSelectionIds.value = ids
+      console.log(val, ids)
+      return ids
     }
 
     const closeInfoDialog = () => {
       dialogVisible.value = false
+    }
+    const getList = () => {
+      loadingData.value = true
+      let requestData = {
+        categoryId: '',
+        startTime: '',
+        endTime: '',
+        title: '',
+        id: '',
+        pageNumber: page.currentPage,
+        pageSize: page.pageSize,
+      }
+      GetList(requestData).then(response => {
+        console.log(response)
+        loadingData.value = false
+        total.value = response.data.data.total
+        tableData.item = response.data.data.data
+      })
+    }
+
+    const handleSizeChange = val => {
+      page.pageSize = val
+      page.currentPage = 1
+      getList()
+      console.log(`每页 ${val} 条`)
+    }
+    const handleCurrentChange = val => {
+      page.currentPage = val
+      getList()
+      console.log(`当前页: ${val}`)
+    }
+    // eslint-disable-next-line no-unused-vars
+    const toTime = (row, column, cellValue, index) => {
+      return timestampToTime(row.createDate)
+    }
+    const toCategory = row => {
+      let findItem = typeOptions.item.find(item => item.id === row.categoryId)
+      if (findItem && findItem.category_name) {
+        return findItem.category_name
+      } else {
+        return row.categoryId
+      }
     }
     watch(
       () => category.items,
@@ -194,9 +270,13 @@ export default {
     )
 
     onMounted(() => {
+      getList()
       getCategory()
     })
     return {
+      loadingData,
+      total,
+      page,
       dialogVisible,
       closeInfoDialog,
       typeOptions,
@@ -207,6 +287,11 @@ export default {
       handleEdit,
       handleDelete,
       handleDeleteSelected,
+      handleSelectionChange,
+      handleSizeChange,
+      handleCurrentChange,
+      toTime,
+      toCategory,
     }
   },
 }

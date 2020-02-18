@@ -7,7 +7,7 @@
     @close="close"
     @opened="opened"
   >
-    <el-form :model="form">
+    <el-form :model="form" ref="form">
       <el-form-item label="类型" :label-width="formLabelWidth">
         <el-select v-model="form.category" placeholder="请选择活动区域">
           <el-option v-for="item in categoryOptions.items" :label="item.category_name" :value="item.id" :key="item.id">
@@ -23,7 +23,7 @@
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button @click="dialogVisibleFlag = false">取 消</el-button>
-      <el-button type="primary" @click="submit">确 定</el-button>
+      <el-button type="primary" @click="submit" :loading="submitStatus">确 定</el-button>
     </div>
   </el-dialog>
 </template>
@@ -44,9 +44,11 @@ export default {
       default: () => [],
     },
   },
-  setup(props, { root, emit }) {
+  setup(props, context) {
+    let { root, emit } = context
     const dialogVisibleFlag = ref(false)
     const formLabelWidth = ref('70px')
+    const submitStatus = ref(false)
 
     const form = reactive({
       category: '',
@@ -59,22 +61,30 @@ export default {
     })
 
     const submit = () => {
+      submitStatus.value = true
       let requestData = {
         category: form.category,
         title: form.title,
         content: form.content,
       }
-      AddInfo(requestData).then(response => {
-        let { resCode, message } = response.data
-        if (resCode === 0) {
-          root.$message({
-            message: message,
-            type: 'success',
-          })
-        }
-        console.log(response)
-      })
-      dialogVisibleFlag.value = false
+      AddInfo(requestData)
+        .then(response => {
+          let { resCode, message } = response.data
+          if (resCode === 0) {
+            root.$message({
+              message: message,
+              type: 'success',
+            })
+          }
+          submitStatus.value = false
+          dialogVisibleFlag.value = false
+          console.log(response)
+        })
+        // eslint-disable-next-line no-unused-vars
+        .catch(error => {
+          submitStatus.value = false
+          dialogVisibleFlag.value = false
+        })
     }
 
     // methods
@@ -101,11 +111,14 @@ export default {
         })
         .catch(() => {})
     }
+
     // 监听
     watch(() => {
       dialogVisibleFlag.value = props.dialogVisible
     })
+    onMounted(() => {})
     return {
+      submitStatus,
       dialogVisibleFlag,
       formLabelWidth,
       form,

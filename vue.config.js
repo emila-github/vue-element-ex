@@ -1,40 +1,40 @@
-const path = require("path");
+const path = require('path')
 module.exports = {
   // 基本路径
-  publicPath: process.env.NODE_ENV === "production" ? "" : "/",
+  publicPath: process.env.NODE_ENV === 'production' ? '' : '/',
   // 输出文件目录
-  outputDir: process.env.NODE_ENV === "production" ? "dist" : "devdist",
+  outputDir: process.env.NODE_ENV === 'production' ? 'dist' : 'devdist',
   // eslint-loader 是否在保存的时候检查
   lintOnSave: true,
   /**
    * webpack配置,see https://github.com/vuejs/vue-cli/blob/dev/docs/webpack.md
    **/
   chainWebpack: config => {
-    const svgRule = config.module.rule("svg");
-    svgRule.uses.clear();
+    const svgRule = config.module.rule('svg')
+    svgRule.uses.clear()
     svgRule
-      .use("svg-sprite-loader")
-      .loader("svg-sprite-loader")
+      .use('svg-sprite-loader')
+      .loader('svg-sprite-loader')
       .options({
-        symbolId: "icon-[name]",
-        include: ["./src/icons"]
-      });
+        symbolId: 'icon-[name]',
+        include: ['./src/icons'],
+      })
   },
   configureWebpack: config => {
     config.resolve = {
       // 配置解析别名
-      extensions: [".js", ".json", ".vue"],
+      extensions: ['.js', '.json', '.vue'],
       alias: {
-        vue: "vue/dist/vue.js",
-        "@": path.resolve(__dirname, "./src"),
-        public: path.resolve(__dirname, "./public"),
-        components: path.resolve(__dirname, "./src/components"),
-        common: path.resolve(__dirname, "./src/common"),
-        api: path.resolve(__dirname, "./src/api"),
-        views: path.resolve(__dirname, "./src/views"),
-        data: path.resolve(__dirname, "./src/data")
-      }
-    };
+        vue: 'vue/dist/vue.js',
+        '@': path.resolve(__dirname, './src'),
+        public: path.resolve(__dirname, './public'),
+        common: path.resolve(__dirname, './src/common'),
+        api: path.resolve(__dirname, './src/api'),
+        components: path.resolve(__dirname, './src/components'),
+        views: path.resolve(__dirname, './src/views'),
+        data: path.resolve(__dirname, './src/data'),
+      },
+    }
   },
   // 生产环境是否生成 sourceMap 文件
   productionSourceMap: false,
@@ -47,15 +47,15 @@ module.exports = {
     // css预设器配置项
     loaderOptions: {
       sass: {
-        prependData: `@import "./src/styles/common.scss";`
-      }
-    }
+        prependData: `@import "./src/styles/common.scss";`,
+      },
+    },
     // 启用 CSS modules for all css / pre-processor files.
     // requireModuleExtension: false
   },
   // use thread-loader for babel & TS in production build
   // enabled by default if the machine has more than 1 cores
-  parallel: require("os").cpus().length > 1,
+  parallel: require('os').cpus().length > 1,
   /**
    *  PWA 插件相关配置,see https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-pwa
    */
@@ -63,31 +63,31 @@ module.exports = {
   // webpack-dev-server 相关配置
   devServer: {
     open: false, // 编译完成是否打开网页
-    host: "0.0.0.0", // 指定使用地址，默认localhost,0.0.0.0代表可以被外界访问
+    host: '0.0.0.0', // 指定使用地址，默认localhost,0.0.0.0代表可以被外界访问
     port: 8080, // 访问端口
     https: false, // 编译失败时刷新页面
     hot: true, // 开启热加载
     hotOnly: false,
     // 设置代理
     proxy: {
-      "/devApi": {
-        target: "http://www.web-jshtml.cn/productapi/token", // 你请求的第三方接口
+      '/devApi': {
+        target: 'http://www.web-jshtml.cn/productapi/token', // 你请求的第三方接口
         changeOrigin: true, // 在本地会创建一个虚拟服务端，然后发送请求的数据，并同时接收请求的数据，这样服务端和服务端进行数据的交互就不会有跨域问题
         pathRewrite: {
           // 路径重写，
-          "^/devApi": "" // 替换target中的请求地址，也就是说以后你在请求https://www.web-jshtml.cn/productApi/XXXXX这个地址的时候直接写成/api即可。
-        }
-      }
+          '^/devApi': '', // 替换target中的请求地址，也就是说以后你在请求https://www.web-jshtml.cn/productApi/XXXXX这个地址的时候直接写成/api即可。
+        },
+      },
     },
     overlay: {
       // 全屏模式下是否显示脚本错误
       warnings: true,
-      errors: true
-    }
+      errors: true,
+    },
     // before: app => {}
   },
   /**
    * 第三方插件配置
    */
-  pluginOptions: {}
-};
+  pluginOptions: {},
+}

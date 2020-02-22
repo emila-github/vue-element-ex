@@ -15,6 +15,14 @@ export function AddInfo(data) {
     data: data,
   })
 }
+// 编辑信息
+export function EditInfo(data) {
+  return service.request({
+    method: 'post',
+    url: '/news/editInfo/',
+    data: data,
+  })
+}
 // 删除信息
 export function DeleteInfo(data) {
   return service.request({

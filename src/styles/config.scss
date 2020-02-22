@@ -9,3 +9,13 @@ $layoutHeader: 75px;
   -ms-#{$type}: $value;
   #{$type}: $value;
 }
+
+@for $i from 1 through 110 {
+  .margin-left-#{$i} {
+    margin-left: (1px * $i);
+  }
+
+  .margin-right-#{$i} {
+    margin-right: (1px * $i);
+  }
+}

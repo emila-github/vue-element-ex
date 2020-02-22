@@ -17,6 +17,7 @@ export default {}
 #MainWrap {
   height: 100vh;
   background-color: #f7f7f7;
+
   // position: fixed;
   // top: 75px;
   // left: $navWidth;
@@ -33,6 +34,7 @@ export default {}
     padding-right: 30px;
     -webkit-box-sizing: border-box;
     .content {
+      position: relative;
       width: 100%;
       height: 100%;
       padding-top: 30px;

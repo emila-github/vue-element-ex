@@ -7,17 +7,17 @@
     @close="close"
     @opened="opened"
   >
-    <el-form :model="form" ref="form">
-      <el-form-item label="类型" :label-width="formLabelWidth">
+    <el-form :model="form" ref="addInfoForm">
+      <el-form-item label="类型" :label-width="formLabelWidth" prop="category">
         <el-select v-model="form.category" placeholder="请选择活动区域">
           <el-option v-for="item in categoryOptions.items" :label="item.category_name" :value="item.id" :key="item.id">
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="标题" :label-width="formLabelWidth">
+      <el-form-item label="标题" :label-width="formLabelWidth" prop="title">
         <el-input v-model="form.title" autocomplete="off"></el-input>
       </el-form-item>
-      <el-form-item label="概况" :label-width="formLabelWidth">
+      <el-form-item label="概况" :label-width="formLabelWidth" prop="content">
         <el-input type="textarea" v-model="form.content"></el-input>
       </el-form-item>
     </el-form>
@@ -45,7 +45,7 @@ export default {
     },
   },
   setup(props, context) {
-    let { root, emit } = context
+    let { root, emit, refs } = context
     const dialogVisibleFlag = ref(false)
     const formLabelWidth = ref('70px')
     const submitStatus = ref(false)
@@ -59,7 +59,7 @@ export default {
     const categoryOptions = reactive({
       items: [],
     })
-
+    // methods
     const submit = () => {
       submitStatus.value = true
       let requestData = {
@@ -78,6 +78,7 @@ export default {
           }
           submitStatus.value = false
           dialogVisibleFlag.value = false
+          refs.addInfoForm.resetFields()
           console.log(response)
         })
         // eslint-disable-next-line no-unused-vars
@@ -87,7 +88,6 @@ export default {
         })
     }
 
-    // methods
     const opened = () => {
       console.log('props.category', props.category)
       categoryOptions.items = props.category

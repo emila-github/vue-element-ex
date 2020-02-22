@@ -57,6 +57,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  z-index: 10;
 
   .nav-bar-icon {
     margin-left: 32px;

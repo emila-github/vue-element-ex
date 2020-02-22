@@ -1,5 +1,6 @@
 import { GetCategory } from '@/api/news'
 import { reactive } from '@vue/composition-api'
+import service from '@/utils/request'
 
 export function common() {
   const category = reactive({
@@ -16,4 +17,13 @@ export function common() {
     category,
     getCategory,
   }
+}
+
+// 获取七牛云token
+export function QiniuToken(data) {
+  return service.request({
+    method: 'post',
+    url: '/uploadImgToken/',
+    data: data,
+  })
 }

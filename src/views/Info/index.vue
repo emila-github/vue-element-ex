@@ -18,6 +18,8 @@
             <el-date-picker
               v-model="formInline.date1"
               type="daterange"
+              format="yyyy 年 MM 月 dd 日"
+              value-format="yyyy-MM-dd HH:mm:ss"
               range-separator="至"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
@@ -25,7 +27,7 @@
             </el-date-picker>
           </el-form-item>
           <el-form-item label="关键字">
-            <el-select v-model="formInline.keywordSelected" placeholder="关键字" style="width: 100px;">
+            <el-select v-model="formInline.keywordSelected" placeholder="关键字类型" style="width: 100px;">
               <el-option
                 v-for="option in keywordOptions"
                 :key="option.value"
@@ -35,9 +37,12 @@
               </el-option>
             </el-select>
           </el-form-item>
+          <el-form-item label="活动名称">
+            <el-input v-model="formInline.keyword" placeholder="关键字"></el-input>
+          </el-form-item>
 
           <el-form-item>
-            <el-button type="primary" @click="onSubmit">查询</el-button>
+            <el-button type="primary" @click="onSearch">查询</el-button>
           </el-form-item>
         </el-col>
         <el-col :span="2" class="add-area">
@@ -56,13 +61,21 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="45" align="center"> </el-table-column>
-      <el-table-column prop="title" label="标题" width="180"> </el-table-column>
-      <el-table-column prop="createDate" :formatter="toTime" label="创建时间" width="180"> </el-table-column>
-      <el-table-column prop="category" :formatter="toCategory" label="类型" width="180"> </el-table-column>
+      <el-table-column prop="title" label="标题" width="120"> </el-table-column>
+      <el-table-column prop="createDate" :formatter="toTime" label="创建时间" width="100"> </el-table-column>
+      <el-table-column prop="category" :formatter="toCategory" label="类型" width="100"> </el-table-column>
       <el-table-column prop="content" label="内容"> </el-table-column>
-      <el-table-column label="操作" width="180" align="center">
+      <el-table-column label="操作" width="300" align="center">
         <template slot-scope="scope">
           <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+          <!-- <router-link
+            class="margin-left-10 margin-right-10"
+            :to="{ name: 'InfoDetailed', query: { id: scope.row.id } }"
+          >
+            <el-button size="mini">编辑详情</el-button>
+          </router-link> -->
+          <el-button size="mini" @click="toDetailedPage(scope.row)">编辑详情</el-button>
+
           <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
         </template>
       </el-table-column>
@@ -152,14 +165,19 @@ export default {
     ])
     const formInline = reactive({
       keywordSelected: 'id',
-      user: '',
+      keyword: '',
       typeSelected: null,
       date1: '',
     })
-    const onSubmit = () => {
-      console.log('submit!')
+    const onSearch = () => {
+      console.log('onSearch!', formInline)
+      getList()
     }
-
+    // TODO:search data
+    // const formatSearchData = () => {
+    //   let requestData = {}
+    //   return requestData
+    // }
     const tableData = reactive({
       item: [
         {
@@ -169,6 +187,14 @@ export default {
         },
       ],
     })
+    const toDetailedPage = row => {
+      root.$router.push({
+        name: 'InfoDetailed',
+        query: {
+          id: row.id,
+        },
+      })
+    }
     const confirmDelete = datas => {
       console.log('todo confirmDelete', datas.ids)
       DeleteInfo({ id: datas.ids }).then(response => {
@@ -178,6 +204,7 @@ export default {
             message: message,
             type: 'success',
           })
+          currentSelectionIds.value = []
           getList()
         }
         console.log(response)
@@ -202,6 +229,13 @@ export default {
       // });
     }
     const handleDeleteSelected = () => {
+      if (!currentSelectionIds.value || !currentSelectionIds.value.length) {
+        root.$message({
+          message: '请选择要删除的数据',
+          type: 'error',
+        })
+        return false
+      }
       root.confirm({
         content: '是否删除选中记录, 是否继续?',
         fn: confirmDelete,
@@ -282,8 +316,9 @@ export default {
       typeOptions,
       keywordOptions,
       formInline,
-      onSubmit,
+      onSearch,
       tableData,
+      toDetailedPage,
       handleEdit,
       handleDelete,
       handleDeleteSelected,

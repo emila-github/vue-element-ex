@@ -17,7 +17,9 @@
             <span slot="title">{{ item.meta.name }}</span>
           </template>
           <template v-for="subItem in item.children">
-            <el-menu-item :key="subItem.id" :index="subItem.path">{{ subItem.meta.name }} </el-menu-item>
+            <el-menu-item v-if="!subItem.hidden" :key="subItem.id" :index="subItem.path"
+              >{{ subItem.meta.name }}
+            </el-menu-item>
           </template>
         </el-submenu>
       </template>

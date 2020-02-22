@@ -92,6 +92,25 @@ const routes = [
       },
     ],
   },
+  {
+    path: '/user',
+    name: 'User',
+    meta: {
+      name: '用户管理',
+      icon: 'menu',
+    },
+    component: () => import('../views/Layout'),
+    children: [
+      {
+        path: '/userIndex',
+        name: 'UserIndex',
+        meta: {
+          name: '用户列表',
+        },
+        component: () => import('../views/User/index'),
+      },
+    ],
+  },
 ]
 
 const router = new VueRouter({

@@ -1,6 +1,6 @@
 <template>
-  <el-select v-model="selected" placeholder="关键字类型" style="width: 100px;">
-    <el-option v-for="option in initOptions" :key="option.value" :label="option.label" :value="option.value">
+  <el-select v-model="data.selected" placeholder="关键字类型" style="width: 100px;">
+    <el-option v-for="option in data.initOptions" :key="option.value" :label="option.label" :value="option.value">
     </el-option>
   </el-select>
 </template>
@@ -16,8 +16,9 @@ export default {
       default: () => {},
     },
   },
-  data() {
-    return {
+  // eslint-disable-next-line no-unused-vars
+  setup(props, { root }) {
+    const data = reactive({
       initOptions: [],
       selected: '',
       options: [
@@ -42,32 +43,26 @@ export default {
           label: '邮箱',
         },
       ],
-    }
-  },
-  methods: {
-    initOption() {
-      let initData = this.config.init
+    })
+    let initOption = () => {
+      let initData = props.config.init
       if (!initData.length) {
         console.log('配置不能为空')
         return false
       }
       let optionArr = []
       initData.forEach(item => {
-        let arr = this.options.filter(elem => elem.value === item)
+        let arr = data.options.filter(elem => elem.value === item)
         arr[0] && optionArr.push(arr[0])
       })
-      this.initOptions = optionArr
-    },
-  },
-  watch: {
-    config: {
-      // eslint-disable-next-line no-unused-vars
-      handler(newValue, oldValue) {
-        console.log('----', newValue)
-        this.initOption()
-      },
-      immediate: true, // 组件出事化时 马上监听
-    },
+      data.initOptions = optionArr
+    }
+    onMounted(() => {
+      initOption()
+    })
+    return {
+      data,
+    }
   },
 }
 </script>

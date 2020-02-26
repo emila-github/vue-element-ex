@@ -36,7 +36,7 @@ export default {
   // eslint-disable-next-line no-unused-vars
   setup(props, { root }) {
     const data = reactive({
-      configOptions: ['name', 'phone'],
+      configOptions: { init: ['name', 'phone'] },
       formInline: {
         keywordSelected: 'id',
         keyword: '',

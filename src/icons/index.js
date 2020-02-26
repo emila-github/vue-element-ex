@@ -11,7 +11,7 @@ Vue.component('svg-icon', SvgIcon)
 // 第三个：定义遍历文件规则
 const req = require.context('./svg', false, /\.svg$/)
 const requireAll = requireContext => {
-  console.log('requireContext', requireContext.keys().map(requireContext))
+  // console.log('requireContext', requireContext.keys().map(requireContext))
   return requireContext.keys().map(requireContext)
 }
 requireAll(req)

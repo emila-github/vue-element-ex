@@ -20,7 +20,7 @@ export default {
     },
   },
   setup(props) {
-    console.log('svgicon props', props)
+    // console.log('svgicon props', props)
 
     const iconName = computed(() => {
       return `#icon-${props.iconClass}`

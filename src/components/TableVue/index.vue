@@ -30,8 +30,8 @@
 <script>
 // eslint-disable-next-line no-unused-vars
 import { reactive, ref, onMounted, watch, onBeforeMount } from '@vue/composition-api'
-import { requestUrl } from '@/api/requestUrl'
-import { loadTableData } from '@/api/common'
+
+import { tableLoadData } from './tableLoadData'
 export default {
   name: 'TableVue',
   props: {
@@ -42,6 +42,7 @@ export default {
   },
   // eslint-disable-next-line no-unused-vars
   setup(props, { root }) {
+    const { loadData, tableData } = tableLoadData()
     const data = reactive({
       tableConfig: {
         // 请求接口URL及配置
@@ -86,33 +87,6 @@ export default {
       this.multipleSelection = val
     }
 
-    let loadData = () => {
-      let { urlKey, method, data: _data } = data.tableConfig.requestData
-
-      let defautlData = {
-        pageNumber: 1,
-        pageSize: 2,
-      }
-
-      let requestData = {
-        url: requestUrl[urlKey],
-        method,
-        data: Object.assign({}, defautlData, _data),
-      }
-
-      loadTableData(requestData)
-        .then(response => {
-          console.log(response)
-          let responseData = response.data.data.data
-          if (responseData && responseData.length) {
-            data.tableData = responseData
-          }
-        })
-        .catch(err => {
-          console.log(err)
-        })
-    }
-
     const initTableConfig = () => {
       let configData = props.config
       let keys = Object.keys(data.tableConfig)
@@ -124,9 +98,17 @@ export default {
       }
     }
 
+    watch(
+      () => tableData.items,
+      (newValue, oldValue) => {
+        console.log(newValue, oldValue)
+        data.tableData = newValue
+      },
+    )
+
     onBeforeMount(() => {
       initTableConfig()
-      loadData()
+      loadData(data.tableConfig)
     })
 
     return {

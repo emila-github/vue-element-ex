@@ -27,3 +27,13 @@ export function QiniuToken(data) {
     data: data,
   })
 }
+
+// 请求表格数据
+export function loadTableData(params) {
+  let { method = 'post', url = '', data = {} } = params
+  return service.request({
+    method: method,
+    url: url,
+    data: data,
+  })
+}

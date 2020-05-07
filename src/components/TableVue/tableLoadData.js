@@ -4,6 +4,7 @@ import { loadTableData } from '@/api/common'
 export function tableLoadData() {
   const tableData = reactive({
     items: [],
+    total: 0,
   })
   const loadData = params => {
     console.log('todo loadData')
@@ -22,10 +23,10 @@ export function tableLoadData() {
 
     loadTableData(requestData)
       .then(response => {
-        console.log(response)
         let responseData = response.data.data.data
         if (responseData && responseData.length) {
           tableData.items = responseData
+          tableData.total = response.data.data.total
         }
       })
       .catch(err => {

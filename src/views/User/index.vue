@@ -67,7 +67,7 @@ export default {
         tHead: [
           {
             label: '邮箱/用户名',
-            field: 'email',
+            field: 'title',
             width: 120,
           },
           {
